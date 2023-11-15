@@ -1,19 +1,3 @@
-/*****************************************************/
-/*
-start:  2023/10/28
-end:    2023/10/28
-
-Description:
-日志代码，单例模式
-
-Point:
-单例模式，记得构造函数私有化（防止外部实例化），可将实例的访问点封装在一个公共静态方法中，
-类的使用者只需要调用该方法来获取实例
-
-Author：acc
-*/
-/*****************************************************/
-
 #ifndef _LOG_HPP_
 #define _LOG_HPP_
 
@@ -98,7 +82,7 @@ enum
     FATAL
 };
 
-class Logger : noncopyable // 单例模式
+class Logger : noncopyable
 {
 public:
     static Logger &GetInstance();
