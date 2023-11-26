@@ -1,9 +1,8 @@
-#include "Channel.hpp"
-#include "log.hpp"
-
 #include <sys/epoll.h>
 
-class EventLoop;
+#include "Channel.hpp"
+#include "EventLoop.hpp"
+#include "log.hpp"
 
 Channel::Channel(EventLoop *loop, int fd)
     : loop_(loop),
@@ -13,6 +12,7 @@ Channel::Channel(EventLoop *loop, int fd)
       index_(-1),
       tied_(false)
 {
+    LOG_INFO("fd_:%d", fd_);
     LOG_INFO("----------Channel up------------");
 }
 
@@ -46,12 +46,12 @@ void Channel::tie(const std::shared_ptr<void> &obj)
 
 void Channel::remove()
 {
-    // loop_->removeChannel(this);
+    loop_->removeChannel(this);
 }
 
 void Channel::update()
 {
-    // loop_->updateChannel(this);
+    loop_->updateChannel(this);
 }
 
 void Channel::handleEventWithGuard(Timestamp receiveTime)

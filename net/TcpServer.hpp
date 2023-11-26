@@ -7,12 +7,9 @@
 #include "Acceptor.hpp"
 #include "inetAddress.hpp"
 #include "Callbacks.hpp"
-// #include "TcpConnection.hpp"
+#include "TcpConnection.hpp"
 
 #include <unordered_map>
-
-class EventLoopThreadPool;
-class TcpConnection;
 
 class TcpServer : noncopyable
 {

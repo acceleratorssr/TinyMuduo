@@ -28,6 +28,18 @@ TcpServer::TcpServer(EventLoop *loop,
                                                   std::placeholders::_1, std::placeholders::_2));
 }
 
+TcpServer::~TcpServer()
+{
+    LOG_INFO("TcpServer::~TcpServer [%s] destructing.", name_.c_str());
+    for (auto &item : connections_)
+    {
+        TcpConnectionPtr conn(item.second);
+        item.second.reset();
+        conn->getLoop()->runInLoop(
+            std::bind(&TcpConnection::connectDestroyed, conn));
+    }
+}
+
 void TcpServer::setThreadNum(int numThreads)
 {
     threadPool_->setThreadNum(numThreads);
@@ -44,4 +56,43 @@ void TcpServer::start()
 
 void TcpServer::newConnection(int sockfd, const inetAddress &peerAddr)
 {
+    EventLoop *ioLoop = threadPool_->getNextLoop();
+    char buf[64] = {0};
+    snprintf(buf, sizeof(buf), "-%s#%d", ipPort_.c_str(), next_connection_id_);
+    ++next_connection_id_;
+    std::string connName = name_ + buf;
+    LOG_INFO("TcpServer::newConnection [%s] -> new connection [%s] from %s",
+             name_.c_str(), connName.c_str(), peerAddr.toIpPort().c_str());
+
+    inetAddress localAddr(getLocalAddr(sockfd));
+
+    TcpConnectionPtr conn(new TcpConnection(
+        ioLoop,
+        connName,
+        sockfd,
+        localAddr,
+        peerAddr));
+    connections_[connName] = conn;
+    conn->setConnectionCallback(connectionCallback_);
+    conn->setMessageCallback(messageCallback_);
+    conn->setWriteCompleteCallback(writeCompleteCallback_);
+    conn->setCloseCallback(
+        std::bind(&TcpServer::removeConnection, this, std::placeholders::_1));
+    ioLoop->runInLoop(std::bind(&TcpConnection::connectEstablished, conn));
+}
+
+void TcpServer::removeConnection(const TcpConnectionPtr &conn)
+{
+    loop_->runInLoop(
+        std::bind(&TcpServer::removeConnectionInLoop, this, conn));
+}
+
+void TcpServer::removeConnectionInLoop(const TcpConnectionPtr &conn)
+{
+    LOG_INFO("TcpServer::removeConnectionInLoop [%s] -> connection %s",
+             name_.c_str(), conn->name().c_str());
+    connections_.erase(conn->name());
+    EventLoop *ioLoop = conn->getLoop();
+    ioLoop->QueueInLoop(
+        std::bind(&TcpConnection::connectDestroyed, conn));
 }

@@ -14,6 +14,6 @@ namespace CurrentThread
         }
         return t_cachedTid;
    }
-}//namespace CurrentThread
+} // namespace CurrentThread
 
-#endif
+#endif // _CURRENTTHREAD_HPP_

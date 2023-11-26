@@ -12,4 +12,4 @@ protected:
     ~noncopyable() = default;
 };
 
-#endif  //_NONCOPYABLE_HPP_
+#endif // _NONCOPYABLE_HPP_

@@ -1,15 +1,4 @@
-// #include "timestamp.hpp"
-// #include "/home/acc/myMuduo/MyMuduo/timestamp.hpp"
 #include "./Timestamp.hpp"
-/*
-第四种include方式，使用g++ -o t timestamp.cpp -std=c++11
-报错：
-timestamp.cpp:3:33: fatal error: MyMuduo/timestamp.hpp: No such file or directory
-    #include "MyMuduo/timestamp.hpp"
-                                    ^
-compilation terminated.*/
-// #include "MyMuduo/timestamp.hpp"
-
 
 Timestamp::Timestamp() : microSecondsSinceEpoch_(0)
 {
@@ -30,8 +19,8 @@ std::string Timestamp::toString() const
 {
     char buf[128] = {0};
     std::tm *localTime = std::localtime(&microSecondsSinceEpoch_);
-    int year = localTime->tm_year + 1900; // tm_year表示的是从1900年开始的年份
-    int month = localTime->tm_mon + 1;    // tm_mon表示的月份是0到11
+    int year = localTime->tm_year + 1900;
+    int month = localTime->tm_mon + 1;
     int day = localTime->tm_mday;
     int hour = localTime->tm_hour;
     int minute = localTime->tm_min;

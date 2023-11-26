@@ -94,4 +94,4 @@ private:
     int loglevel_;
 };
 
-#endif //_LOG_HPP_
+#endif // _LOG_HPP_

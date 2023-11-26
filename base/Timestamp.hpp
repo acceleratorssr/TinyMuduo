@@ -15,7 +15,7 @@ public:
     static Timestamp now();
     std::string toString() const;
 private:
-    int64_t microSecondsSinceEpoch_;//新世纪以来的微秒 -> UNIX 时间戳
+    int64_t microSecondsSinceEpoch_;
 };
 
-#endif  //_TIMESTAMP_HPP_
+#endif // _TIMESTAMP_HPP_

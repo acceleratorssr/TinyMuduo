@@ -28,4 +28,4 @@ private:
 sockaddr_in getLocalAddr(int sockfd);
 sockaddr_in getPeerAddr(int sockfd);
 
-#endif
+#endif // _SOCKET_HPP_
